@@ -25,6 +25,14 @@ quit                                                //退出
 自作主张小功能：
 1. 端口、用户名、用户密码可以main参数，可以手动输.
 2. 用户名重复可以自动使用默认用户名fault+i
+
+
+cmd运行：
+1. 导出jar包
+2. cmd到当前目录
+3. java -jar rmi.jar
+4. java -cp rmi.jar client.Client name password
+
 ```
 
 

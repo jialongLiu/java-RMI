@@ -65,9 +65,12 @@ public class Client {
 			if (success) {// 添加成功
 				break;// 退出循环
 			} else {// 添加失败（当用户名重复时出错）
-				args[0]="default"+i;
-				i++;
-				System.err.println("重名错误,已使用默认用户名："+args[0]);
+				if(args!= null && args.length >=1){
+					args[0]="default"+i;
+					i++;
+					System.err.println("重名错误,已使用默认用户名："+args[0]);
+				}
+				System.err.println("重名错误");
 			}
 		}
 		/**

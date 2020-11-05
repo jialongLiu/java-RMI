@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Server",
+            "request": "launch",
+            "mainClass": "server.Server",
+            "projectName": "RMI_a6dcbe63"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"
@@ -15,8 +22,7 @@
             "name": "Debug (Launch)-Client<src_de569afb>",
             "request": "launch",
             "mainClass": "client.Client",
-            "projectName": "src_de569afb",
-            // "args": ["lpl","123"]
+            "projectName": "src_de569afb"
         },
         {
             "type": "java",
