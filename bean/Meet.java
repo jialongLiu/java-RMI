@@ -1,5 +1,7 @@
 package bean;
+
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 /**
@@ -90,9 +92,14 @@ public class Meet implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Meeting"+meetingId+" [startTime=" + startTime
-				+ ", endTime=" + endTime + ", title=" + title
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startTimeDateString = formatter.format(startTime);
+		String endTimeDateString = formatter.format(endTime);
+		return "Meeting"+meetingId+" [startTime=" + startTimeDateString
+				+ ", endTime=" + endTimeDateString + ", title=" + title
 				+ ", participants=" + participants +"]";
 	}
+
+	
 	
 }

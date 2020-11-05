@@ -1,7 +1,7 @@
 package client;
 
-import interface_.MeetInterface;
-import interface_.UserInterface;
+import myInterface.MeetInterface;
+import myInterface.UserInterface;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -22,10 +22,10 @@ import bean.User;
  * @author ljl
  *
  */
-// add:ljl,520,1998-12-12 15:36:12,1998-12-12 17:36:12,title,lpl
-// query:ljl,520,1998-12-12 15:36:12,1998-12-12 17:36:12
 // delete:ljl,520,0
 // clear:ljl,520
+
+
 public class Client {
 
 	static Meet meeting;// 会议
@@ -33,7 +33,8 @@ public class Client {
 	static User user;// 用户
 	static MeetInterface meetingInterface;// 操作会议的接口
 	static UserInterface userInterface;// 操作用户的接口
-	static SimpleDateFormat format = new SimpleDateFormat("M-d-k:m");// 格式化日期
+	static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-hh:mm");// 格式化日期
+	static int i =0;
 
 	public static void main(String[] args)
 			throws RemoteException, MalformedURLException, NotBoundException, ParseException {
@@ -49,16 +50,24 @@ public class Client {
 		String password;// 密码
 		Scanner in = new Scanner(System.in);
 		while (true) {
-			System.out.println("输入用户名");
-			name = in.nextLine();
-			System.out.println("输入密码");
-			password = in.nextLine();
+			if(args== null||args.length<1){
+				System.out.println("输入用户名");
+				name = in.nextLine();
+				System.out.println("输入密码");
+				password = in.nextLine();
+			}else{
+				name=args[0];
+				password=args[1];
+			}
+			
 			user = new User(name, password);// 创建用户
 			boolean success = userInterface.addUser(user);// 添加用户
 			if (success) {// 添加成功
 				break;// 退出循环
 			} else {// 添加失败（当用户名重复时出错）
-				System.err.println("重名错误");
+				args[0]="default"+i;
+				i++;
+				System.err.println("重名错误,已使用默认用户名："+args[0]);
 			}
 		}
 		/**
@@ -70,7 +79,7 @@ public class Client {
 				break;// 退出循环
 			} else {// 用户数量仅有1个
 				if (falg == 0) {// 第一次检测到只有一个用户，给出提示
-					System.out.println("只有一个用户，请再添加用户");
+					System.out.println("目前系统中只有一个用户，请再次启动客户端进行注册新用户！");
 					falg = 1;// 标记：之后的循环不再提示
 				}
 			}
@@ -106,11 +115,11 @@ public class Client {
 			printIntroduction();
 			return 0;
 		} else if (line.equals("quit")) {// 输入为quit时程序结束
-			System.out.println("Bye");
+			System.out.println("Bye~~~~~");
 			return 1;
 		} else if (line.equals("clear")) {// 输入为clear时清空会议记录
 			meetingInterface.clearMeeting();// 调用远程方法
-			System.out.println("Clear finished.");
+			System.out.println("Clear successful！");
 			return 0;
 		} else if (line.startsWith("add")) {// 输入为add时添加会议
 			addMeeting(line);
@@ -122,7 +131,7 @@ public class Client {
 			queryMeeting(line);
 			return 0;
 		} else {
-			System.err.println("非法命令");// 对于不存在的命令给出错误提示
+			System.err.println("bad request！");// 对于不存在的命令给出错误提示
 			return 0;
 		}
 	}
@@ -145,7 +154,7 @@ public class Client {
 				System.err.println("找不到该用户");
 				return;// 退出函数，继续获取输入
 			} else if (user2.getName().equals(user.getName())) {// 如果输入的用户名为本人，给出错误提示
-				System.err.println("请勿输入本人");
+				System.err.println("错误：输入本人");
 				return;// 退出函数，继续获取输入
 			} else {
 				meetingID++;// 会议的ID
@@ -163,7 +172,7 @@ public class Client {
 					users.add(user2);
 					meeting = new Meet(meetingID, start, end, title, users);// 实例化会议
 					if (!meetingInterface.addMeeting(meeting)) {// 调用远程方法
-						System.err.println("时间重叠");// 远程方法会进行时间重叠检测
+						System.err.println("会议时间冲突");// 远程方法会进行会议时间冲突检测
 					} else {
 						System.out.println("添加成功");
 					}
@@ -192,7 +201,7 @@ public class Client {
 			if (success) {
 				System.out.println("删除会议成功");
 			} else {
-				System.err.println("删除失败");
+				System.err.println("删除失败(ID错误 或 非创建者删除)");
 			}
 		}
 	}
@@ -232,7 +241,7 @@ public class Client {
 	public static void printIntroduction() {
 		System.out.println("RMI Menu:");
 		System.out.println("    1.add");
-		System.out.println("        arguments: <username> <start> <end> <title>例如，12月23日16:00表示为12-23-16:00");
+		System.out.println("        arguments: <username> <start> <end> <title>例如：2020年1月1日16:00表示为2020-01-01-16:00");
 		System.out.println("    2.delete");
 		System.out.println("        arguments: meetingid");
 		System.out.println("    3.clear");
